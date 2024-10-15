@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bluegreen-service   # Common service for blue-green deployment
+  labels:
+    app: web
+spec:
+  selector:
+    app: nginx              # Initially pointing to Nginx (blue environment)
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer  # Or LoadBalancer for cloud environments
