@@ -1,0 +1,41 @@
+# Step 1: Set Up a Common Service for Traffic Routing
+# You already have individual services (nginx-service and apache-service) for each deployment, but for a blue-green deployment, we need a single Service that can switch between both environments.
+# Modify your existing Nginx and Apache services to ClusterIP type (so they won’t be exposed directly).
+# Create a new service that will route traffic, initially to the Nginx deployment.
+# Common Service (bluegreen-service.yaml):
+
+# Step 2: Deploy Nginx (Blue Environment)
+# You already have the nginx-deployment.yaml. If it's not deployed yet, use the following command to deploy it:
+
+kubectl apply -f nginx.yaml
+
+# Then deploy the common service:
+
+kubectl apply -f bluegreen-service.yaml
+
+# Step 3: Deploy Apache (Green Environment)
+# Use the apache-deployment.yaml to deploy the Apache (green environment):
+
+kubectl apply -f apache.yaml
+
+# At this point:
+# Your Nginx deployment (blue) is handling traffic.
+# Your Apache deployment (green) is ready but not receiving any traffic yet.
+# Step 4: Switch Traffic from Blue (Nginx) to Green (Apache)
+# To switch traffic from Nginx to Apache, you simply need to update the selector of the common service (bluegreen-service.yaml) to point to the Apache deployment instead of Nginx.
+
+kubectl apply -f bluegreen-service.yaml
+
+# Step 6: Optional - Stop Nginx (Blue) Deployment
+# If you want to completely stop the Nginx (blue) environment, you can scale it down:
+
+kubectl scale deployment nginx-deployment --replicas=0
+
+# Alternatively, you can delete the Nginx deployment altogether:
+
+kubectl delete -f nginx.yaml
+
+# Summary
+# You initially direct traffic to Nginx using the bluegreen-service.
+# When ready, you modify the bluegreen-service selector to point to the Apache deployment to switch traffic.
+# You can scale down or remove the Nginx deployment once the traffic switch is verified.
