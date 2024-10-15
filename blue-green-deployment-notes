@@ -28,6 +28,7 @@ kubectl apply -f bluegreen-service.yaml
 
 # Step 6: Optional - Stop Nginx (Blue) Deployment
 # If you want to completely stop the Nginx (blue) environment, you can scale it down:
+# You can also change the number of Replicas in the Nginx deployment to 0
 
 kubectl scale deployment nginx-deployment --replicas=0
 
